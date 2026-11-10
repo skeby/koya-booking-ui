@@ -274,6 +274,13 @@ body:focus {
   color: var(--color-text) !important;
 }
 
+/* The theme toggle animates the new theme itself (components/ui/theme-toggle.tsx). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
