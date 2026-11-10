@@ -9,6 +9,8 @@ export const useBooking = (id: string | undefined) =>
     path: `${paths.bookings}/${id ?? ""}`,
     enabled: !!id,
     refetchOnMount: true,
+    // The page shows a "couldn't find that booking" result; no toast on top.
+    silentStatuses: [404],
   })
 
 /** One cursor page of a patient's bookings, oldest first. */

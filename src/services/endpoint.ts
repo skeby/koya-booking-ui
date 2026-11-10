@@ -15,7 +15,9 @@ export const apiCall = async (
   tanstack?: {
     client: QueryClient
     signal?: AbortSignal
-  }
+  },
+  /** Statuses the page explains itself (e.g. a 404 empty state): no toast for these. */
+  silentStatuses?: number[]
 ) => {
   const messageId = "apicall-loading-message"
 
@@ -56,6 +58,7 @@ export const apiCall = async (
     return res.data
   } catch (error: any) {
     if (error?.canceled) return false
+    if (error?.status && silentStatuses?.includes(error.status)) return false
     message.error(error?.error || "Something went wrong!", 6)
     return false
   } finally {

@@ -6,6 +6,7 @@ import { useAppMutation } from "../../hooks"
 import { useBooking } from "../../hooks/use-bookings"
 import { useSlotLookup } from "../../hooks/use-slots"
 import AppointmentSlip from "../../components/bookings/appointment-slip"
+import NotFoundIllustration from "../../components/ui/not-found-illustration"
 import { paths } from "../../services/static"
 import type { Booking } from "../../types"
 import { Utils } from "../../utils"
@@ -25,7 +26,9 @@ const BookingDetails = () => {
     method: "delete",
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["slots"] })
-      message.success("Appointment cancelled. The time is free for other patients.")
+      message.success(
+        "Appointment cancelled. The time is free for other patients."
+      )
     },
   })
 
@@ -37,7 +40,7 @@ const BookingDetails = () => {
   if (!data) {
     return (
       <Result
-        status="404"
+        icon={<NotFoundIllustration className="mx-auto" />}
         title="We couldn't find that booking"
         subTitle="Check the link, or look your bookings up by email."
         extra={
@@ -93,7 +96,9 @@ const BookingDetails = () => {
             </p>
           </>
         ) : (
-          <h1 className="display text-text m-0 text-3xl font-semibold tracking-tight">Your appointment</h1>
+          <h1 className="display text-text m-0 text-3xl font-semibold tracking-tight">
+            Your appointment
+          </h1>
         )}
       </header>
 
@@ -101,7 +106,12 @@ const BookingDetails = () => {
 
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
         {confirmed && upcoming ? (
-          <Button danger size="large" onClick={confirmCancel} loading={cancel.isPending}>
+          <Button
+            danger
+            size="large"
+            onClick={confirmCancel}
+            loading={cancel.isPending}
+          >
             Cancel appointment
           </Button>
         ) : (

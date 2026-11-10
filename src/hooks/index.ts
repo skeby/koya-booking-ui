@@ -48,6 +48,8 @@ export interface QueryData<T = any> {
   method?: string
   /** Keep showing the last successful result while a new query key (filters/page) is fetching, instead of flashing to a loading state. */
   keepPreviousData?: boolean
+  /** Error statuses the page shows its own state for, so no error toast is raised. */
+  silentStatuses?: number[]
   options?: Partial<DefinedInitialDataOptions<T>>
 }
 
@@ -140,15 +142,23 @@ export const useAppQuery = <T>(queryData: QueryData<T>) => {
     staleTime,
     method = "get",
     keepPreviousData: shouldKeepPreviousData,
+    silentStatuses,
     options,
   } = queryData
   return useQuery<T>({
     queryKey,
     queryFn: ({ client, signal }) =>
-      apiCall(data ?? {}, path, method, extraHeaders, headers, params, showLoader, {
-        client,
-        signal,
-      }),
+      apiCall(
+        data ?? {},
+        path,
+        method,
+        extraHeaders,
+        headers,
+        params,
+        showLoader,
+        { client, signal },
+        silentStatuses
+      ),
     enabled,
     gcTime,
     staleTime,
