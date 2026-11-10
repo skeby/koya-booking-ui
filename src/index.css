@@ -12,7 +12,7 @@
   --font-sans: "Inter", sans-serif;
   --font-display: "Space Grotesk", "Inter", sans-serif;
 
-  /* Monochrome with a clinic-teal hint — light mode */
+  /* Monochrome — light mode. Colour is reserved for status tags. */
   --color-bg: #ffffff; /* page */
   --color-bg-muted: #f5f5f5;
   --color-background-primary: #fafafa; /* canvas behind cards */
@@ -47,8 +47,6 @@
   --color-error-light: #fbecec;
   --color-amber: #c77b1e;
   --color-success: #2e7d5b;
-  --color-accent: #2f6f6a; /* clinic teal, a hint only */
-  --color-accent-tint: #e7f0ef;
 
   --shadow-active:
     0 4px 12px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.14);
@@ -92,8 +90,6 @@
   --color-error-light: #381d22;
   --color-amber: #e09a44;
   --color-success: #58ad8a;
-  --color-accent: #6fb3ab;
-  --color-accent-tint: #13201f;
 
   --shadow-active: 0 4px 12px 0 rgba(0, 0, 0, 0.35), 0 1px 3px 0 rgba(0, 0, 0, 0.45);
   --shadow-hover: 0 4px 12px 0 rgba(0, 0, 0, 0.35), 2px 2px 5px 0 rgba(0, 0, 0, 0.25);
@@ -152,7 +148,7 @@ body:focus {
    punched notches on both edges, and a stub below for the reference. */
 .slip {
   @apply bg-bg border-border-muted relative border;
-  border-top: 3px solid var(--color-accent);
+  border-top: 3px solid var(--color-primary);
 }
 
 .slip-tear {
@@ -192,7 +188,7 @@ body:focus {
 }
 
 .slot-chip:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 

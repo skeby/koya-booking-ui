@@ -27,7 +27,7 @@ const NotFoundIllustration = ({ className }: { className?: string }) => {
             width="14"
             height="11"
             fill="none"
-            stroke="var(--color-accent)"
+            stroke="var(--color-fade)"
             strokeWidth="1.5"
             strokeDasharray="3 2"
           />
@@ -46,7 +46,7 @@ const NotFoundIllustration = ({ className }: { className?: string }) => {
         fontFamily="Space Grotesk, Inter, sans-serif"
         fontSize="22"
         fontWeight="700"
-        fill="var(--color-accent)"
+        fill="var(--color-text)"
       >
         ?
       </text>

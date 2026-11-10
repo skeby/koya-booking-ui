@@ -98,7 +98,7 @@ const BookingModal = ({ slot, onClose }: { slot: Slot | null; onClose: () => voi
       centered
     >
       {current && (
-        <div className="bg-bg-muted border-accent mb-5 border-l-[3px] px-4 py-3">
+        <div className="bg-bg-muted border-primary mb-5 border-l-[3px] px-4 py-3">
           <p className="text-fade m-0 text-xs font-semibold">{Utils.longDay(current.start)}</p>
           <p className="display text-text m-0 mt-0.5 text-2xl font-semibold tabular-nums">
             {Utils.timeRange(current.start, current.end)}

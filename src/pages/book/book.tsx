@@ -147,7 +147,7 @@ const Book = () => {
                     <span className="display text-lg leading-6 font-semibold tabular-nums">
                       {dayjs(d.first).format("D MMM")}
                     </span>
-                    <span className={cn("text-[11px]", active ? "opacity-80" : d.free ? "text-accent" : "text-fade-2")}>
+                    <span className={cn("text-[11px]", active ? "opacity-80" : d.free ? "text-secondary-alpha" : "text-fade-2")}>
                       {d.free ? `${d.free} free` : "None left"}
                     </span>
                   </button>
