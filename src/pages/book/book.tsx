@@ -82,8 +82,7 @@ const Book = () => {
   return (
     <div className="space-y-6">
       <section>
-        <p className="text-accent m-0 text-[11px] font-bold tracking-[0.14em] uppercase">Appointments</p>
-        <h1 className="display text-text m-0 mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h1 className="display text-text m-0 text-3xl font-semibold tracking-tight sm:text-4xl">
           Book an appointment
         </h1>
         <p className="text-fade m-0 mt-2 max-w-xl text-sm leading-6">
