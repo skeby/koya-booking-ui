@@ -1,5 +1,7 @@
 # Clinic booking page
 
+**Live:** https://booking.koya.checkmeout.me
+
 React page for booking clinic appointments: see open times, book one, and get a confirmation. Patients can also look up their bookings by email, page through them, and cancel. Built for Task 1 of the Koya Academy assessment on top of [koya-booking-api](https://github.com/skeby/koya-booking-api).
 
 Stack: React 19, Vite, TypeScript, antd 6, Tailwind v4, TanStack Query, React Hook Form with zod, Redux Toolkit (theme preference), dayjs.
