@@ -71,8 +71,12 @@ const BookingDetails = () => {
     <div className="mx-auto max-w-2xl space-y-6">
       {modalContext}
 
-      <Link to={`/bookings?email=${encodeURIComponent(data.email)}`} className="text-fade! hover:text-text! inline-flex items-center gap-1.5 text-[13px] font-semibold">
-        <FiArrowLeft aria-hidden /> All bookings for {data.email}
+      <Link
+        to={`/bookings?email=${encodeURIComponent(data.email)}`}
+        className="text-fade! hover:text-text! flex max-w-full items-center gap-1.5 text-[13px] font-semibold"
+      >
+        <FiArrowLeft aria-hidden className="shrink-0" />
+        <span className="min-w-0 truncate">All bookings for {data.email}</span>
       </Link>
 
       <header>

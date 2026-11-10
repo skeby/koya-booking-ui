@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Empty, Segmented, Skeleton } from "antd"
 import { FiClock } from "react-icons/fi"
 import dayjs from "dayjs"
@@ -79,6 +79,25 @@ const Book = () => {
 
   const loading = doctorSlots.isLoading || allSlots.isLoading
 
+  // On narrow screens the doctor tabs and day strip scroll sideways; keep the
+  // selected ones visible (e.g. after opening a link with ?doctor=&day=).
+  const filtersRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const root = filtersRef.current
+    if (!root) return
+    for (const el of root.querySelectorAll(".ant-segmented-item-selected, [role=tab][aria-selected=true]")) {
+      const strip = el.closest(".overflow-x-auto")
+      if (!strip) continue
+      const box = strip.getBoundingClientRect()
+      const item = el.getBoundingClientRect()
+      if (item.left < box.left || item.right > box.right) {
+        // Centre it, or show its start when it is wider than the strip.
+        const offset = item.width >= box.width ? 0 : (box.width - item.width) / 2
+        strip.scrollLeft += item.left - box.left - offset
+      }
+    }
+  }, [doctor, day?.key, providers.length])
+
   return (
     <div className="space-y-6">
       <section>
@@ -92,7 +111,7 @@ const Book = () => {
       </section>
 
       <section className="card">
-        <div className="border-border-muted space-y-4 border-b p-4 sm:p-5">
+        <div ref={filtersRef} className="border-border-muted space-y-4 border-b p-4 sm:p-5">
           <div className="no-scrollbar -mx-1 overflow-x-auto px-1">
             <Segmented
               value={doctor}
@@ -116,7 +135,7 @@ const Book = () => {
                     aria-selected={active}
                     onClick={() => setSearchParams({ day: d.key })}
                     className={cn(
-                      "flex min-w-[76px] shrink-0 cursor-pointer flex-col items-start border px-3 py-2 text-left transition-colors",
+                      "flex min-w-19 shrink-0 cursor-pointer flex-col items-start border px-3 py-2 text-left transition-colors",
                       active
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-border bg-bg text-text hover:border-border-active"
@@ -129,7 +148,7 @@ const Book = () => {
                       {dayjs(d.first).format("D MMM")}
                     </span>
                     <span className={cn("text-[11px]", active ? "opacity-80" : d.free ? "text-accent" : "text-fade-2")}>
-                      {d.free ? `${d.free} free` : "Full"}
+                      {d.free ? `${d.free} free` : "None left"}
                     </span>
                   </button>
                 )
@@ -159,9 +178,11 @@ const Book = () => {
                 const free = slots.filter(isBookable).length
                 return (
                   <div key={provider}>
-                    <div className="mb-2.5 flex items-baseline justify-between gap-2">
-                      <h3 className="text-secondary-alpha m-0 text-sm font-semibold">{provider}</h3>
-                      <span className="text-fade-2 text-xs">
+                    <div className="mb-2.5 flex items-baseline justify-between gap-3">
+                      <h3 className="text-secondary-alpha m-0 min-w-0 text-sm font-semibold wrap-anywhere">
+                        {provider}
+                      </h3>
+                      <span className="text-fade-2 shrink-0 text-xs whitespace-nowrap">
                         {free} of {slots.length} free
                       </span>
                     </div>

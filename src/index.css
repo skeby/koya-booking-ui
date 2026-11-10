@@ -258,6 +258,26 @@ body:focus {
   @apply rounded-none!
 }
 
+/* Toasts from the static message.* calls render outside the app's
+   ConfigProvider, so they'd stay antd's white even in dark mode. Give them
+   the app's own surface and text (same fix as unoye-hr-ui). In antd 6 the
+   surface is .ant-message-notice itself (antd 5 used -notice-content).
+   antd's rule is more specific (and outside any layer), hence !important. */
+.ant-message .ant-message-notice,
+.ant-message .ant-message-notice-content {
+  background: var(--color-bg) !important;
+  color: var(--color-text) !important;
+  border-radius: 0 !important;
+}
+.dark .ant-message .ant-message-notice {
+  border: 1px solid var(--color-border);
+}
+/* antd 6 puts its own text colour on the inner wrapper and title. */
+.ant-message .ant-message-notice-wrapper,
+.ant-message .ant-message-notice-title {
+  color: var(--color-text) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

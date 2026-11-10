@@ -3,10 +3,12 @@ import StatusTag from "../ui/status-tag"
 import type { Booking, Slot } from "../../types"
 import { Utils, cn } from "../../utils"
 
-const Detail = ({ label, children }: { label: string; children: ReactNode }) => (
-  <div className="min-w-0">
+// Details wrap instead of truncating: a confirmation must show the full name
+// and email so the patient can check them.
+const Detail = ({ label, children, className }: { label: string; children: ReactNode; className?: string }) => (
+  <div className={cn("min-w-0", className)}>
     <dt className="text-fade text-[11px] font-bold tracking-wide uppercase">{label}</dt>
-    <dd className="text-text m-0 mt-1 truncate text-sm font-semibold">{children}</dd>
+    <dd className="text-text m-0 mt-1 text-sm font-semibold wrap-anywhere">{children}</dd>
   </div>
 )
 
@@ -41,16 +43,25 @@ const AppointmentSlip = ({ booking, slot }: { booking: Booking; slot?: Slot }) =
             </p>
           </>
         ) : (
-          <p className="display text-text m-0 text-2xl font-semibold">Slot {booking.slot_id}</p>
+          <>
+            <p className="display text-text m-0 text-2xl font-semibold">Time no longer listed</p>
+            <p className="text-fade m-0 mt-1 text-xs wrap-anywhere">
+              This slot ({booking.slot_id}) has been removed from the schedule. Please contact the clinic.
+            </p>
+          </>
         )}
 
-        <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4">
+        <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4">
           <Detail label="Doctor">{slot?.provider ?? "—"}</Detail>
           <Detail label="Length">
             {slot ? `${Utils.minutesBetween(slot.start, slot.end)} minutes` : "—"}
           </Detail>
-          <Detail label="Patient">{booking.name}</Detail>
-          <Detail label="Email">{booking.email}</Detail>
+          <Detail label="Patient" className="col-span-2 sm:col-span-1">
+            {booking.name}
+          </Detail>
+          <Detail label="Email" className="col-span-2 sm:col-span-1">
+            {booking.email}
+          </Detail>
         </dl>
       </div>
 

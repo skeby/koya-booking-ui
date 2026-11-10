@@ -1,13 +1,13 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { Button, Empty, Input, Table, type TableColumnsType } from "antd"
+import { Link, useNavigate } from "react-router-dom"
+import { Button, Empty, Input, Skeleton, Table, type TableColumnsType } from "antd"
 import { FiChevronLeft, FiChevronRight, FiSearch } from "react-icons/fi"
 import { useSearchParams } from "../../hooks"
 import { usePatientBookings } from "../../hooks/use-bookings"
 import { useSlotLookup } from "../../hooks/use-slots"
 import StatusTag from "../../components/ui/status-tag"
 import type { Booking, Slot } from "../../types"
-import { Utils } from "../../utils"
+import { Utils, cn } from "../../utils"
 
 /**
  * Cursor pagination: the API only gives a `next_cursor`, so the page keeps
@@ -69,6 +69,11 @@ const MyBookings = () => {
     },
   ]
 
+  const bookings = page ? page.bookings : []
+  const emptyState = (
+    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={`No bookings for ${email}.`} className="wrap-anywhere" />
+  )
+
   const search = () => {
     const next = draft.trim()
     setSearchParams({ email: next })
@@ -111,10 +116,59 @@ const MyBookings = () => {
 
       {email && (
         <section className="card overflow-hidden">
+          {/* Phones: stacked cards, so status and time never sit off-screen. */}
+          <div className="sm:hidden">
+            {isLoading ? (
+              <div className="p-4">
+                <Skeleton active paragraph={{ rows: 4 }} />
+              </div>
+            ) : bookings.length === 0 ? (
+              <div className="py-6">{emptyState}</div>
+            ) : (
+              <ul className={cn("divide-border-muted m-0 list-none divide-y p-0", isFetching && "opacity-60")}>
+                {bookings.map((booking) => {
+                  const slot = byId.get(booking.slot_id)
+                  return (
+                    <li key={booking.id}>
+                      <Link
+                        to={`/bookings/${booking.id}`}
+                        className="hover:bg-primary-light! block px-4 py-3.5 transition-colors"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="text-text m-0 text-sm font-semibold">
+                              {slot ? Utils.shortDay(slot.start) : "Time no longer listed"}
+                              {slot && (
+                                <span className="text-fade ml-2 font-normal tabular-nums">
+                                  {Utils.timeRange(slot.start, slot.end)}
+                                </span>
+                              )}
+                            </p>
+                            <p className="text-secondary-alpha m-0 mt-0.5 text-[13px] wrap-anywhere">
+                              {slot?.provider ?? `Slot ${booking.slot_id}`}
+                            </p>
+                          </div>
+                          <span className="shrink-0">
+                            <StatusTag status={booking.status} />
+                          </span>
+                        </div>
+                        <p className="text-fade-2 m-0 mt-1.5 text-xs">
+                          <span className="display text-fade tracking-wider">{Utils.reference(booking.id)}</span>
+                          {" · "}Booked {Utils.dateTime(booking.created_at)}
+                        </p>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </div>
+
           <Table<Booking>
+            className="hidden sm:block"
             rowKey="id"
             columns={columns}
-            dataSource={page ? page.bookings : []}
+            dataSource={bookings}
             loading={isLoading || isFetching}
             pagination={false}
             scroll={{ x: 640 }}
@@ -122,14 +176,7 @@ const MyBookings = () => {
               onClick: () => navigate(`/bookings/${booking.id}`),
               className: "cursor-pointer",
             })}
-            locale={{
-              emptyText: (
-                <Empty
-                  image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  description={`No bookings for ${email}.`}
-                />
-              ),
-            }}
+            locale={{ emptyText: emptyState }}
           />
           {(cursors.length > 1 || page?.next_cursor) && (
             <div className="border-border-muted flex items-center justify-between gap-3 border-t px-4 py-3">
